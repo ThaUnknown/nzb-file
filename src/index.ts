@@ -1,17 +1,19 @@
+import mime from 'mime/lite'
 import parse from 'nzb-parser'
-import { NNTP } from 'nntp-js'
 import yencode from 'yencode'
 
-import mime from 'mime/lite'
-import { Segment } from 'nzb-parser/src/models.ts'
+import { Pool } from './pool.ts'
+
+import type { Segment } from 'nzb-parser/src/models.ts'
 
 const textDecoder = new TextDecoder('ascii')
 
 export class NNTPFile implements File {
   // nntp stuff
-  nntp: NNTP
+  pool: Pool
   segments: Segment[]
 
+  // File stuff
   lastModified: number
   name: string
   size: number
@@ -25,10 +27,10 @@ export class NNTPFile implements File {
   _start = 0
   _end = 0
 
-  constructor (opts: Partial<NNTPFile> & { nntp: NNTP }) {
-    if (!opts?.nntp) throw new Error('NNTP instance is required')
+  constructor (opts: Partial<NNTPFile> & { pool: Pool }) {
+    if (!opts?.pool) throw new Error('NNTP instance is required')
 
-    this.nntp = opts.nntp!
+    this.pool = opts.pool!
     this.segments = opts.segments!
     this.lastModified = +opts.lastModifiedDate!
     this.lastModifiedDate = opts.lastModifiedDate!
@@ -57,7 +59,7 @@ export class NNTPFile implements File {
     offset = 0
 
     for (const segment of requiredSegments) {
-      const { data } = await this.nntp.body(`<${segment.messageId}>`)
+      const { data } = await this.pool.body(`<${segment.messageId}>`)
       const decoded = yencode.from_post(Buffer.from(data))
       if (offset + this.segmentSize > this._end) {
         yield decoded.data.subarray(0, this._end - offset)
@@ -68,6 +70,10 @@ export class NNTPFile implements File {
       }
       offset += this.segmentSize
     }
+  }
+
+  async bytes () {
+    return new Uint8Array(await this.arrayBuffer())
   }
 
   /**
@@ -127,23 +133,18 @@ export class NNTPFile implements File {
   }
 }
 
-export default async function fromNZB (string: string, domain: string, port: number, login: string, password: string) {
-  const { files } = parse(string)
+export default async function fromNZB (nzbcontents: string, domain: string, port: number, login: string, password: string, group: string, poolSize = 24) {
+  const { files, groups } = parse(nzbcontents)
+
+  const targetGroup = groups.length === 1 ? groups[0] : group
   const fileList = []
-  const nntp = new NNTP(domain, 119)
-  await nntp.connect()
+  const pool = new Pool(login, password, targetGroup, domain, port, poolSize)
 
-  const caps = nntp.caps!
-  if ('STARTTLS' in caps) {
-    await nntp.starttls()
-  }
-  await nntp.login(login, password)
-  await nntp.group('alt.binaries.multimedia.anime.highspeed')
   for (const { name, segments, datetime } of files) {
-    const { data } = await nntp.body(`<${segments[0].messageId}>`)
+    const { data } = await pool.body(`<${segments[0].messageId}>`)
     const { props } = yencode.from_post(Buffer.from(data))
-    fileList.push(new NNTPFile({ name, size: parseInt(props.begin.size), segments, segmentSize: parseInt(props.part.end), lastModifiedDate: datetime, nntp }))
+    fileList.push(new NNTPFile({ name, size: parseInt(props.begin.size), segments, segmentSize: parseInt(props.part.end), lastModifiedDate: datetime, pool }))
   }
 
-  return fileList
+  return { files: fileList, pool }
 }

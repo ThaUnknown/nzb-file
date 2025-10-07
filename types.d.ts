@@ -1,5 +1,5 @@
 declare module 'yencode' {
-  export type YencData = {
+  export interface YencData {
     yencStart: number
     dataStart: number
     dataEnd: number
@@ -24,11 +24,12 @@ declare module 'yencode' {
     }
     data: Buffer
     crc32: Buffer
-    warnings: {
+    warnings: Array<{
       code: string
       message: string
-    }[]
+    }>
   }
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   export function from_post (data: Buffer): YencData
 }
