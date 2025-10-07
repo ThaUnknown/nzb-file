@@ -38,4 +38,13 @@ const slices = [
 
 const allData = slices.map(s => s.arrayBuffer()) // all slices will be downloaded in parallel, using the connection pool
 await Promise.all(allData)
+
+import { Readable } from 'node:stream'
+import { createWriteStream } from 'node:fs'
+
+const readable = Readable.from(biggest) // NZBFile implements async iterable, so you can create a Node.js Readable stream from it
+readable.pipe(createWriteStream('output.file')) // this will download the entire file, using a single connection only, so quite slowly, but with low memory usage
+
+
+pool.destroy() // remember to destroy the pool when you are done
 ```
