@@ -45,30 +45,36 @@ export class NNTPFile implements File {
   }
 
   async * [Symbol.asyncIterator] () {
-    const requiredSegments: Segment[] = []
-    let offset = 0
+    if (this.size === 0) return
+
+    let fileOffset = 0
+
     for (const segment of this.segments) {
-      if (offset >= this._end) break
-      if (offset + this.segmentSize < this._start) {
-        offset += this.segmentSize
+      const segmentEnd = fileOffset + this.segmentSize
+
+      // Skip segments entirely before our range
+      if (segmentEnd <= this._start) {
+        fileOffset = segmentEnd
         continue
       }
-      requiredSegments.push(segment)
-      offset += this.segmentSize
-    }
-    offset = 0
+      // Stop if we're past our range
+      if (fileOffset >= this._end) {
+        break
+      }
 
-    for (const segment of requiredSegments) {
       const { data } = await this.pool.body(`<${segment.messageId}>`)
       const decoded = yencode.from_post(Buffer.from(data))
-      if (offset + this.segmentSize > this._end) {
-        yield decoded.data.subarray(0, this._end - offset)
-      } else if (offset < this._start) {
-        yield decoded.data.subarray(this._start - offset)
+
+      const sliceStart = Math.max(0, this._start - fileOffset)
+      const sliceEnd = Math.min(decoded.data.length, this._end - fileOffset)
+
+      if (sliceStart > 0 || sliceEnd < decoded.data.length) {
+        yield decoded.data.subarray(sliceStart, sliceEnd)
       } else {
         yield decoded.data
       }
-      offset += this.segmentSize
+
+      fileOffset = segmentEnd
     }
   }
 
@@ -99,6 +105,7 @@ export class NNTPFile implements File {
   }
 
   async arrayBuffer () {
+    if (this.size === 0) return new ArrayBuffer(0)
     const data = new Uint8Array(this.size)
     let offset = 0
     for await (const chunk of this) {
@@ -109,10 +116,12 @@ export class NNTPFile implements File {
   }
 
   async text (): Promise<string> {
+    if (this.size === 0) return ''
     return textDecoder.decode(await this.arrayBuffer())
   }
 
   stream () {
+    if (this.size === 0) return new ReadableStream()
     let iterator: AsyncGenerator<Uint8Array, void, unknown>
     return new ReadableStream({
       start: () => {
