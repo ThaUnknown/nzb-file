@@ -1,8 +1,8 @@
 import mime from 'mime/lite'
 import parse from 'nzb-parser'
-import yencode from 'yencode'
 
 import { Pool } from './pool.ts'
+import yencode from './yencode.cjs'
 
 import type { Segment } from 'nzb-parser/src/models.ts'
 

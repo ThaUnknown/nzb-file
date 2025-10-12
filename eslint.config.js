@@ -1,6 +1,6 @@
 import config from 'eslint-config-standard-universal'
-import tseslint from 'typescript-eslint'
 import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   ...config(globals.node),
@@ -9,6 +9,6 @@ export default tseslint.config(
       parserOptions: {
         tsconfigRootDir: import.meta.dirname
       }
-    },
+    }
   }
 )
