@@ -12,11 +12,11 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4
       nntp-js:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       nzb-parser:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       yencode:
         specifier: ^1.2.3
         version: 1.2.3
@@ -1019,11 +1019,11 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nntp-js@1.0.1:
-    resolution: {integrity: sha512-q8fAzjti8VVICHYhvMfAvLay3kMwnHmEFHkNn4fMMIH99gby+PI3BuuK758pLXcFyeyP58iC6xJAF+yH7Ol/dw==}
+  nntp-js@1.0.2:
+    resolution: {integrity: sha512-nMvXJn3rf/fen/VCYfAIeGGVL9kgrxFss7NlpqUvCGHyabrP0dWF0SR+cozOybPcJu48iOQ5iYw6Q94x9wq8aA==}
 
-  nzb-parser@1.0.1:
-    resolution: {integrity: sha512-91ZU6JUtP+ESVh+qb2zwUMjPLzxUEjY351dHvV7Oxw3MBm9nUupoIA530n1mvHZ1UqoMoBkoZlR3ulPDFDbREg==}
+  nzb-parser@1.0.2:
+    resolution: {integrity: sha512-xJM5Oa7+qbZTPBakXgHKsT/+FltS4xAIBxlA18gRzkZuhL6Cw5I4GrFgEtvSHQM/Tvcd7yO06SidlRoMBwFfEw==}
 
   object-inspect@1.13.4:
     resolution: {integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew==}
@@ -2507,9 +2507,9 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nntp-js@1.0.1: {}
+  nntp-js@1.0.2: {}
 
-  nzb-parser@1.0.1:
+  nzb-parser@1.0.2:
     dependencies:
       fast-xml-parser: 4.5.0
 
