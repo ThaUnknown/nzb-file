@@ -145,7 +145,7 @@ export class NNTPFile implements File {
 export default async function fromNZB (nzbcontents: string, domain: string, port: number, login: string, password: string, group: string, poolSize = 24) {
   const { files, groups } = parse(nzbcontents)
 
-  const targetGroup = groups.length === 1 ? groups[0] : group
+  const targetGroup = groups[0] ? groups[0] : group
   const fileList = []
   const pool = new Pool(login, password, targetGroup, domain, port, poolSize)
 
