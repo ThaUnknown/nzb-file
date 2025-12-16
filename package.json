@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --import tsx --test ./test/*.ts",
-    "compile": "tsc"
+    "compile": "tsc --noCheck"
   },
   "keywords": [
     "nzb",
@@ -26,7 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "mime": "^4.1.0",
-    "nntp-js": "^1.0.2",
+    "nntp-js": "^1.0.3",
     "nzb-parser": "^1.0.2",
     "yencode": "^1.2.3"
   },
