@@ -14,5 +14,9 @@
     "strict": true,
     "checkJs": true,
     "sourceMap": true
-  }
+  },
+  "exclude": [
+    "eslint.config.js",
+    "dist/**/*",
+  ]
 }

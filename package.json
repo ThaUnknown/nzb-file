@@ -1,6 +1,6 @@
 {
   "name": "nzb-file",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Convert NZB files to W3C File-like objects. Supports streaming.",
   "main": "dist/src/index.js",
   "type": "module",
@@ -25,15 +25,15 @@
   "author": "ThaUnknown",
   "license": "ISC",
   "dependencies": {
-    "mime": "^4.0.4",
+    "mime": "^4.1.0",
     "nntp-js": "^1.0.2",
     "nzb-parser": "^1.0.2",
     "yencode": "^1.2.3"
   },
   "devDependencies": {
-    "@types/node": "^22.7.5",
+    "@types/node": "^25.0.2",
     "eslint-config-standard-universal": "^1.0.9",
-    "tsx": "^4.19.1"
+    "tsx": "^4.21.0"
   },
   "files": [
     "!test/",

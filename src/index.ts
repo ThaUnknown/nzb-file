@@ -2,7 +2,7 @@ import mime from 'mime/lite'
 import parse from 'nzb-parser'
 
 import { Pool } from './pool.ts'
-import yencode from './yencode.cjs'
+import { fromPost } from './yencode.ts'
 
 import type { Segment } from 'nzb-parser/src/models.ts'
 
@@ -63,7 +63,7 @@ export class NNTPFile implements File {
       }
 
       const { data } = await this.pool.body(`<${segment.messageId}>`)
-      const decoded = yencode.from_post(Buffer.from(data))
+      const decoded = fromPost(Buffer.from(data), false)
 
       const sliceStart = Math.max(0, this._start - fileOffset)
       const sliceEnd = Math.min(decoded.data.length, this._end - fileOffset)
@@ -145,14 +145,14 @@ export class NNTPFile implements File {
 export default async function fromNZB (nzbcontents: string, domain: string, port: number, login: string, password: string, group: string, poolSize = 24) {
   const { files, groups } = parse(nzbcontents)
 
-  const targetGroup = groups[0] ? groups[0] : group
+  const targetGroup = groups[0] ?? group
   const fileList = []
   const pool = new Pool(login, password, targetGroup, domain, port, poolSize)
 
   for (const { name, segments, datetime } of files) {
-    const { data } = await pool.body(`<${segments[0].messageId}>`)
-    const { props } = yencode.from_post(Buffer.from(data))
-    fileList.push(new NNTPFile({ name, size: parseInt(props.begin.size), segments, segmentSize: parseInt(props.part.end), lastModifiedDate: datetime, pool }))
+    const { data } = await pool.body(`<${segments[0]!.messageId}>`)
+    const { props } = fromPost(Buffer.from(data))
+    fileList.push(new NNTPFile({ name, size: parseInt(props!.begin.size), segments, segmentSize: parseInt(props!.part.end), lastModifiedDate: datetime, pool }))
   }
 
   return { files: fileList, pool }
