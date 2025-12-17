@@ -34,11 +34,17 @@ interface YencData {
 
 const RE_YPROP = /([a-z_][a-z_0-9]*)=/
 
+const decode = y.decode ?? function (data: Buffer, stripDots: boolean) {
+  const buffer = Buffer.allocUnsafe(data.length)
+  const length = y.decodeTo(data, buffer, stripDots)
+  return buffer.subarray(0, length)
+}
+
 const decoderParseLines = function (lines: string[], ydata: YencData['props']) {
   for (let i = 0; i < lines.length; i++) {
     const yprops: Record<string, string> = {}
 
-    let line = lines[i]!.substring(2) // cut off '=y'
+    let line = lines[i].substring(2) // cut off '=y'
     // parse tag
     let p = line.indexOf(' ')
     const tag = (p < 0 ? line : line.substring(0, p))
@@ -136,7 +142,7 @@ export function fromPost (data: Buffer, props = true) {
   }
 
   if (ret.dataStart) {
-    ret.data = y.decode(data.subarray(ret.dataStart, ret.dataEnd), false)
+    ret.data = decode(data.subarray(ret.dataStart, ret.dataEnd), false)
   }
 
   return ret
