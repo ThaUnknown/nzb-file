@@ -150,7 +150,7 @@ export default async function fromNZB (nzbcontents: string, domain: string, port
   const pool = new Pool(login, password, targetGroup, domain, port, poolSize)
 
   for (const { name, segments, datetime } of files) {
-    const { data } = await pool.body(`<${segments[0]!.messageId}>`)
+    const { data } = await pool.body(`<${segments[0].messageId}>`)
     const { props } = fromPost(Buffer.from(data))
     fileList.push(new NNTPFile({ name, size: parseInt(props!.begin.size), segments, segmentSize: parseInt(props!.part.end), lastModifiedDate: datetime, pool }))
   }

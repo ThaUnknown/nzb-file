@@ -44,7 +44,7 @@ const decoderParseLines = function (lines: string[], ydata: YencData['props']) {
   for (let i = 0; i < lines.length; i++) {
     const yprops: Record<string, string> = {}
 
-    let line = lines[i].substring(2) // cut off '=y'
+    let line = lines[i]!.substring(2) // cut off '=y'
     // parse tag
     let p = line.indexOf(' ')
     const tag = (p < 0 ? line : line.substring(0, p))
@@ -53,7 +53,7 @@ const decoderParseLines = function (lines: string[], ydata: YencData['props']) {
     // parse props
     let m = line.match(RE_YPROP)
     while (m) {
-      const prop = m[1]
+      const prop = m[1]!
       let val: string
       const valPos = (m.index ?? 0) + m[0].length
       if (tag === 'begin' && prop === 'name') {
