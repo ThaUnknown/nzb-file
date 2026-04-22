@@ -6,7 +6,7 @@ import { fromPost } from './yencode.ts'
 
 import type { Segment } from 'nzb-parser/src/models.ts'
 
-const textDecoder = new TextDecoder('ascii')
+const textDecoder = new TextDecoder('utf-8')
 
 export class NNTPFile implements File {
   // nntp stuff
