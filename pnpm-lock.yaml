@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@thaunknown/yencode':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.5.0
+        version: 1.5.0
       mime:
         specifier: ^4.1.0
         version: 4.1.0
@@ -122,8 +122,8 @@ packages:
     peerDependencies:
       eslint: '>=9.0.0'
 
-  '@thaunknown/yencode@1.4.0':
-    resolution: {integrity: sha512-cVT4C/7N/cr/fSUeo6+lGvp/vnTXIB+t9E3MDhlVaF+mFf4Bj+ECtucr4ASJoo2UsPKG6rptvJ0d1WP/rgzbiw==}
+  '@thaunknown/yencode@1.5.0':
+    resolution: {integrity: sha512-ydd+uUeCkSNebwzHt9iW8LTt5INOypUI3k79Es7TWXdD15wOaYP0nTbK8sqvL1WWySm1RGhHn11896dCdDOR2A==}
     engines: {node: '>=0.10'}
 
   '@types/estree@1.0.8':
@@ -1330,7 +1330,7 @@ snapshots:
       estraverse: 5.3.0
       picomatch: 4.0.3
 
-  '@thaunknown/yencode@1.4.0':
+  '@thaunknown/yencode@1.5.0':
     dependencies:
       node-gyp-build: 4.8.4
 

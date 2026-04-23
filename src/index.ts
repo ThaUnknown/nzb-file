@@ -2,7 +2,7 @@ import mime from 'mime/lite'
 import parse from 'nzb-parser'
 
 import { Pool } from './pool.ts'
-import { fromPost } from './yencode.ts'
+import { fromPost } from './yencode.cjs'
 
 import type { Segment } from 'nzb-parser/src/models.ts'
 
