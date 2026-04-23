@@ -1,6 +1,6 @@
 {
   "name": "nzb-file",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "Convert NZB files to W3C File-like objects. Supports streaming.",
   "main": "dist/src/index.js",
   "type": "module",
@@ -25,7 +25,7 @@
   "author": "ThaUnknown",
   "license": "ISC",
   "dependencies": {
-    "@thaunknown/yencode": "^1.5.1",
+    "@thaunknown/yencode": "^1.5.2",
     "mime": "^4.1.0",
     "nntp-js": "^1.0.4",
     "nzb-parser": "^1.0.2"
