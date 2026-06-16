@@ -7,10 +7,10 @@ Files follow the W3C spec for File objects.
 ## Installation
 
 ```bash
-npm install nzb-file
+pnpm install nzb-file
 ```
 
-## Usage
+## Example Usage
 
 ```typescript
 const { files, pool } = await fromNZB(
@@ -47,4 +47,34 @@ readable.pipe(createWriteStream('output.file')) // this will download the entire
 
 
 pool.destroy() // remember to destroy the pool when you are done
+```
+
+or if you don't care about a connection pool and just want to download using a single connection or your own pool implementation:
+
+```typescript
+import parse from 'nzb-parser'
+import { NNTPFile } from 'nzb-file'
+import NNTP from 'nntp-js'
+import { fromPost } from '@thaunknown/yencode'
+
+async function fromNZB (nzbcontents: string, domain: string, port: number, login: string, password: string, group: string, poolSize = 24) {
+  const { files, groups } = parse(nzbcontents)
+
+  const targetGroup = groups[0] ?? group
+  const fileList = []
+  const nntp = new NNTP(domain, port)
+  await nntp.connect()
+  if ('STARTTLS' in (nntp.caps ?? {})) await nntp.starttls()
+
+  await nntp.login(login, password)
+  await nntp.group(targetGroup)
+
+  for (const { name, segments, datetime } of files) {
+    const { data } = await nntp.body(`<${segments[0]!.messageId}>`)
+    const { props } = fromPost(Buffer.from(data))
+    fileList.push(new NNTPFile({ name, size: parseInt(props!.begin.size), segments, segmentSize: parseInt(props!.part.end), lastModifiedDate: datetime, pool: nntp }))
+  }
+
+  return { files: fileList, pool: nntp }
+}
 ```

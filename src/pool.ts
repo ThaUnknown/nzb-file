@@ -74,7 +74,7 @@ export class Pool {
     for (const nntp of this.waiters) {
       nntp.reject(new Error('Pool is being destroyed'))
     }
-    await Promise.all([...this.pool].map(nntp => nntp.quit().catch(() => {})))
+    await Promise.allSettled([...this.pool].map(nntp => nntp.quit()))
     this.waiters = []
     this.pool.clear()
     this.available = []

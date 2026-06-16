@@ -6,11 +6,12 @@ import { Pool } from './pool.ts'
 
 import type { Segment } from 'nzb-parser/src/models.ts'
 
+// in practice ASCII is better here, but not all JS runtimes support it... lol?
 const textDecoder = new TextDecoder('utf-8')
 
 export class NNTPFile implements File {
   // nntp stuff
-  pool: Pool
+  pool: Pick<Pool, 'body' | 'destroy'>
   segments: Segment[]
 
   // File stuff
@@ -27,7 +28,7 @@ export class NNTPFile implements File {
   _start = 0
   _end = 0
 
-  constructor (opts: Partial<NNTPFile> & { pool: Pool }) {
+  constructor (opts: Partial<NNTPFile> & { pool: Pick<Pool, 'body' | 'destroy'> }) {
     if (!opts?.pool) throw new Error('NNTP instance is required')
 
     this.pool = opts.pool!
@@ -142,6 +143,8 @@ export class NNTPFile implements File {
   }
 }
 
+export { Pool } from './pool.ts'
+
 export default async function fromNZB (nzbcontents: string, domain: string, port: number, login: string, password: string, group: string, poolSize = 24) {
   const { files, groups } = parse(nzbcontents)
 
@@ -150,7 +153,7 @@ export default async function fromNZB (nzbcontents: string, domain: string, port
   const pool = new Pool(login, password, targetGroup, domain, port, poolSize)
 
   for (const { name, segments, datetime } of files) {
-    const { data } = await pool.body(`<${segments[0].messageId}>`)
+    const { data } = await pool.body(`<${segments[0]!.messageId}>`)
     const { props } = fromPost(Buffer.from(data))
     fileList.push(new NNTPFile({ name, size: parseInt(props!.begin.size), segments, segmentSize: parseInt(props!.part.end), lastModifiedDate: datetime, pool }))
   }
