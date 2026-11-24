@@ -74,7 +74,11 @@ export class Pool {
     for (const nntp of this.waiters) {
       nntp.reject(new Error('Pool is being destroyed'))
     }
-    await Promise.allSettled([...this.pool].map(nntp => nntp.quit()))
+    // a QUIT on a busy connection would interleave with the response it's reading, so drop those sockets instead
+    for (const nntp of this.pool) {
+      if (!this.available.includes(nntp)) nntp.sock?.destroy()
+    }
+    await Promise.allSettled(this.available.map(nntp => nntp.quit()))
     this.waiters = []
     this.pool.clear()
     this.available = []

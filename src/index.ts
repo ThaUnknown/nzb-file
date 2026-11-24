@@ -1,4 +1,4 @@
-import { fromPost } from '@thaunknown/yencode'
+import { crc32, fromPost } from '@thaunknown/yencode'
 import mime from 'mime/lite'
 import parse from 'nzb-parser'
 
@@ -64,7 +64,12 @@ export class NNTPFile implements File {
       }
 
       const { data } = await this.pool.body(`<${segment.messageId}>`)
-      const decoded = fromPost(Buffer.from(data), false)
+      const decoded = fromPost(Buffer.from(data))
+
+      // message-ids can resolve to an article from another upload, so check that this is the expected part
+      const { begin, part, end } = decoded.props!
+      if (parseInt(begin.size) !== this._trueSize || parseInt(part.begin) !== fileOffset + 1) throw new Error(`Article <${segment.messageId}> is not part of ${this.name} at ${fileOffset}`)
+      if (end.pcrc32 && parseInt(end.pcrc32, 16) !== crc32(decoded.data).readUInt32BE()) throw new Error(`Article <${segment.messageId}> failed the CRC check`)
 
       const sliceStart = Math.max(0, this._start - fileOffset)
       const sliceEnd = Math.min(decoded.data.length, this._end - fileOffset)
@@ -155,6 +160,7 @@ export default async function fromNZB (nzbcontents: string, domain: string, port
   for (const { name, segments, datetime } of files) {
     const { data } = await pool.body(`<${segments[0]!.messageId}>`)
     const { props } = fromPost(Buffer.from(data))
+    if (props!.part.begin !== '1') throw new Error(`Article <${segments[0]!.messageId}> is not the first part of ${name}`)
     fileList.push(new NNTPFile({ name, size: parseInt(props!.begin.size), segments, segmentSize: parseInt(props!.part.end), lastModifiedDate: datetime, pool }))
   }
 
