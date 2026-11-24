@@ -15,15 +15,15 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       nntp-js:
-        specifier: ^1.0.7
-        version: 1.0.7
+        specifier: ^1.0.8
+        version: 1.0.8
       nzb-parser:
         specifier: ^1.0.4
         version: 1.0.4
     devDependencies:
       '@types/node':
-        specifier: ^26.6.6
-        version: 26.6.6
+        specifier: ^26.6.7
+        version: 26.6.7
       eslint-config-standard-universal:
         specifier: ^1.0.10
         version: 1.0.10(@typescript-eslint/parser@8.61.1(eslint@9.39.4)(typescript@6.0.3))
@@ -130,8 +130,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/node@26.6.6':
-    resolution: {integrity: sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==}
+  '@types/node@26.6.7':
+    resolution: {integrity: sha512-tovuRfrUILu6v46bMG+BgXxMvsqPBx2WO2as8Rpln+JTff1dbexMtAM4KFTejmL0axsnSWViCW7MecUQpLuBRA==}
 
   '@typescript-eslint/eslint-plugin@8.61.1':
     resolution: {integrity: sha512-ZPlVl3PB3et/59Ne0fv/sci6ZXz4T4Hp4nTJ56i/Y0gR89ARb+KphojTq6j+56E5PIezmOIOOWyY+aWQFd+IkQ==}
@@ -866,8 +866,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nntp-js@1.0.7:
-    resolution: {integrity: sha512-SaFXUtVZK6b8wLW7uWyk9YnhnIpojAuxMhaLmd7RGD8Cd1Mdu1pCgkOUZa1OX6wnIt/LCgr1ujo/UfzTTp6wGg==}
+  nntp-js@1.0.8:
+    resolution: {integrity: sha512-usOxmlLACjkH+NcQRJeMW/ZiCTeQLM3ly6O/fkPVIOlsu9OfUfrDmA5VfAIPQ4tVK8DXRIdIudwJG9PFIq+QEA==}
 
   node-exports-info@1.6.0:
     resolution: {integrity: sha512-pyFS63ptit/P5WqUkt+UUfe+4oevH+bFeIiPPdfb0pFeYEu/1ELnJu5l+5EcTKYL5M7zaAa7S8ddywgXypqKCw==}
@@ -1337,7 +1337,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/node@26.6.6':
+  '@types/node@26.6.7':
     dependencies:
       undici-types: 8.9.0
 
@@ -2250,7 +2250,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nntp-js@1.0.7: {}
+  nntp-js@1.0.8: {}
 
   node-exports-info@1.6.0:
     dependencies:
