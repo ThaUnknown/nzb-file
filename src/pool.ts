@@ -5,8 +5,11 @@ export class Pool {
   available: NNTP[] = []
   waiters: Array<{ resolve: (nntp: NNTP) => void, reject: (error: Error) => void }> = []
   ready: Promise<Pool>
+  depth
 
-  constructor (login: string, password: string, group: string, domain: string, port = 119, size = 24, ConnectionFactory = NNTP) {
+  /** @param depth The maximum number of `body()` calls in flight on 1 connection. A value above 1 uses NNTP pipelining. */
+  constructor (login: string, password: string, group: string, domain: string, port = 119, size = 24, ConnectionFactory = NNTP, depth = 1) {
+    this.depth = depth
     for (let i = 0; i < size; i++) {
       const nntp = new ConnectionFactory(domain, port)
       this.pool.add(nntp)
@@ -33,7 +36,7 @@ export class Pool {
 
         await nntp.login(login, password)
         await nntp.group(group)
-        this._enqueueConnection(nntp)
+        for (let i = 0; i < this.depth; i++) this._enqueueConnection(nntp)
       } catch (error) {
         this.pool.delete(nntp)
       }
@@ -75,10 +78,11 @@ export class Pool {
       nntp.reject(new Error('Pool is being destroyed'))
     }
     // a QUIT on a busy connection would interleave with the response it's reading, so drop those sockets instead
+    const idle = [...this.pool].filter(nntp => this.available.filter(entry => entry === nntp).length === this.depth)
     for (const nntp of this.pool) {
-      if (!this.available.includes(nntp)) nntp.sock?.destroy()
+      if (!idle.includes(nntp)) nntp.sock?.destroy()
     }
-    await Promise.allSettled(this.available.map(nntp => nntp.quit()))
+    await Promise.allSettled(idle.map(nntp => nntp.quit()))
     this.waiters = []
     this.pool.clear()
     this.available = []
