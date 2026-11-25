@@ -7,15 +7,18 @@ export class Pool {
   ready: Promise<Pool>
   depth
 
-  /** @param depth The maximum number of `body()` calls in flight on 1 connection. A value above 1 uses NNTP pipelining. */
-  constructor (login: string, password: string, group: string, domain: string, port = 119, size = 24, ConnectionFactory = NNTP, depth = 1) {
+  /**
+   * @param depth The maximum number of `body()` calls in flight on 1 connection. A value above 1 uses NNTP pipelining.
+   * @param timeout The maximum time in ms that a connection waits for data from the server. Then the connection closes and the call fails.
+   */
+  constructor (login: string, password: string, group: string, domain: string, port = 119, size = 24, ConnectionFactory = NNTP, depth = 1, timeout = 15_000) {
     this.depth = depth
     for (let i = 0; i < size; i++) {
       const nntp = new ConnectionFactory(domain, port)
       this.pool.add(nntp)
     }
 
-    this.ready = this._connectPool(login, password, group)
+    this.ready = this._connectPool(login, password, group, timeout)
   }
 
   _enqueueConnection (nntp: NNTP) {
@@ -28,10 +31,10 @@ export class Pool {
     }
   }
 
-  async _connectPool (login: string, password: string, group: string) {
+  async _connectPool (login: string, password: string, group: string, timeout: number) {
     await Promise.all([...this.pool].map(async (nntp) => {
       try {
-        await nntp.connect()
+        await nntp.connect(false, timeout)
         if ('STARTTLS' in (nntp.caps ?? {})) await nntp.starttls()
 
         await nntp.login(login, password)

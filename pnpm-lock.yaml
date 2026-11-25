@@ -15,8 +15,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       nntp-js:
-        specifier: ^1.0.8
-        version: 1.0.8
+        specifier: ^1.0.9
+        version: 1.0.9
       nzb-parser:
         specifier: ^1.0.4
         version: 1.0.4
@@ -866,8 +866,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nntp-js@1.0.8:
-    resolution: {integrity: sha512-usOxmlLACjkH+NcQRJeMW/ZiCTeQLM3ly6O/fkPVIOlsu9OfUfrDmA5VfAIPQ4tVK8DXRIdIudwJG9PFIq+QEA==}
+  nntp-js@1.0.9:
+    resolution: {integrity: sha512-HDxHQUjgJ55olSgL68OZCb0N21+ch9RNjX8WwtwnnrISrpukvdFpZNGIf/6FEvQVFXpek1r0CDFMedIF7VUOhQ==}
 
   node-exports-info@1.6.0:
     resolution: {integrity: sha512-pyFS63ptit/P5WqUkt+UUfe+4oevH+bFeIiPPdfb0pFeYEu/1ELnJu5l+5EcTKYL5M7zaAa7S8ddywgXypqKCw==}
@@ -2250,7 +2250,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nntp-js@1.0.8: {}
+  nntp-js@1.0.9: {}
 
   node-exports-info@1.6.0:
     dependencies:
